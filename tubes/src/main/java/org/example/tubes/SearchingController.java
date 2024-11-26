@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.HashMap;
 
 public class SearchingController {
     @FXML
@@ -19,7 +18,9 @@ public class SearchingController {
     @FXML
     private Label hasil;
 
-    public HashMap data = new HashMap(); //ganti jadi rbt yak nanti, ini aku nyoba aja pake hashmap
+    // public HashMap data = new HashMap(); //ganti jadi rbt yak nanti, ini aku nyoba aja pake hashmap
+    private rbt<String, String> data = new rbt();
+
 
     public void click(ActionEvent actionEvent) {
         System.out.println("hello");
@@ -28,10 +29,15 @@ public class SearchingController {
         System.out.println("jisung ganteng");
     }
     public void search(ActionEvent actionEvent) { //ini contoh bentuk validation teks nya juga
-        data.put("rahmah", "uga"); //coba ntr running aja, terus ketik "rahmah" di text field nya, ntr kluar uga.
-        if (data.containsKey(searchbar.getText())) {
+        data.put("rahmah", "uga");
+        data.put("Chim", "jihan");
+         //coba ntr running aja, terus ketik "rahmah" di text field nya, ntr kluar uga.
+         String searchtext = searchbar.getText();
+        if (data.containsKey(searchtext)) {
             hasil.setText(data.get(searchbar.getText()).toString());
             //rahmah as a key, uga as a value.
+        } else {
+            hasil.setText("not found");
         }
     }
 }
