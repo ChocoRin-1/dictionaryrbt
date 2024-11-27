@@ -10,7 +10,7 @@
    <children>
       <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../aset/background/bg home tubes.png" />
+            <Image url="@../aset/background/bg%20home%20tubes.png" />
          </image>
       </ImageView>
       <Button fx:id="buttonStart" layoutX="231.0" layoutY="240.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#click" prefHeight="65.0" prefWidth="300.0" style="-fx-background-color: pink; -fx-background-radius: 30; -fx-cursor: hand;" text="START" AnchorPane.bottomAnchor="118.0" AnchorPane.leftAnchor="245.0" AnchorPane.rightAnchor="255.0">
