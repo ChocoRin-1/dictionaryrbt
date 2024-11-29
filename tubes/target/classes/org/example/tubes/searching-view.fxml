@@ -19,7 +19,7 @@
                         <Insets />
                      </opaqueInsets>
                   </TextField>
-                  <Button fx:id="cariEek" layoutX="566.0" layoutY="44.0" mnemonicParsing="false" onAction="#search" prefHeight="34.0" prefWidth="36.0" style="-fx-background-radius: 10; -fx-background-image: bird;" styleClass="searchButton" />
+                  <Button fx:id="cari" layoutX="566.0" layoutY="44.0" mnemonicParsing="false" onAction="#search" prefHeight="34.0" prefWidth="36.0" style="-fx-background-radius: 10; -fx-background-image: bird;" styleClass="searchButton" />
                </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" styleClass="split2">

@@ -14,12 +14,14 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("view/hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style/style.css")).toExternalForm());
+        
         stage.setTitle("KAMUS!");
         stage.setScene(scene);
-        stage.setMinWidth(800);
-        stage.setMinHeight(600);
-        stage.setMaxWidth(800);
-        stage.setHeight(600);
+        
+        // Enable full screen
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("Tekan ESC untuk keluar dari layar penuh");
+        stage.setFullScreenExitKeyCombination(null); 
         stage.show();
     }
 

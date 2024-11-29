@@ -7,16 +7,16 @@ public class rbt<Key extends Comparable<Key>, Value> {
     private static final boolean RED = true;
     private static final boolean BLACK = false;
 
-   
-
     private Node<Key, Value> root;
 
+    // Check if a node is red
     private boolean isRed(Node<Key, Value> node) {
         if (node == null)
             return false;
         return node.color == RED;
     }
 
+    // Rotate left
     private Node<Key, Value> rotateLeft(Node<Key, Value> h) {
         Node<Key, Value> x = h.right;
         h.right = x.left;
@@ -26,6 +26,7 @@ public class rbt<Key extends Comparable<Key>, Value> {
         return x;
     }
 
+    // Rotate right
     private Node<Key, Value> rotateRight(Node<Key, Value> h) {
         Node<Key, Value> x = h.left;
         h.left = x.right;
@@ -35,28 +36,35 @@ public class rbt<Key extends Comparable<Key>, Value> {
         return x;
     }
 
+    // Flip colors
     private void flipColors(Node<Key, Value> h) {
         h.color = RED;
         h.left.color = BLACK;
         h.right.color = BLACK;
     }
 
-    public void put(Key key, Value value, String description) {
-        root = put(root, key, value, description);
+    // Add a key-value pair to the tree with a gimmick
+    public void put(Key key, Value value, String descriptionENG, String descriptionIND) {
+        root = put(root, key, value, descriptionENG, descriptionIND);
         root.color = BLACK;
     }
 
-    private Node<Key, Value> put(Node<Key, Value> h, Key key, Value value, String description) {
+    // Helper method to recursively put a key-value pair in the tree
+    private Node<Key, Value> put(Node<Key, Value> h, Key key, Value value, String descriptionENG, String descriptionIND) {
         if (h == null)
-            return new Node(key, value, RED, description);
+            return new Node<>(key, value, RED, descriptionENG, descriptionIND);
+
         int cmp = key.compareTo(h.key);
         if (cmp < 0)
-            h.left = put(h.left, key, value, description);
+            h.left = put(h.left, key, value, descriptionENG, descriptionIND);
         else if (cmp > 0)
-            h.right = put(h.right, key, value, description);
-        else
-            h.value = value;
+            h.right = put(h.right, key, value, descriptionENG, descriptionIND);
+        else {
+            h.value = value; // Update value if key already exists
+           
+        }
 
+        // Balance the tree
         if (isRed(h.right) && !isRed(h.left))
             h = rotateLeft(h);
         if (isRed(h.left) && isRed(h.left.left))
@@ -67,6 +75,7 @@ public class rbt<Key extends Comparable<Key>, Value> {
         return h;
     }
 
+    // Get the value of a key
     public Value get(Key key) {
         Node<Key, Value> x = root;
         while (x != null) {
@@ -81,24 +90,29 @@ public class rbt<Key extends Comparable<Key>, Value> {
         return null;
     }
 
+    // Check if the tree contains a key
     public boolean containsKey(Key key) {
         return get(key) != null;
     }
 
+
+    // Search for keys that contain a substring
     public List<Node<Key, Value>> searchBySubstring(String substring) {
         List<Node<Key, Value>> results = new ArrayList<>();
         searchBySubstring(root, substring, results);
+        // System.out.println(results);
         return results;
     }
 
+    // Helper method for the in-order traversal search
     private void searchBySubstring(Node<Key, Value> node, String substring, List<Node<Key, Value>> results) {
         if (node == null)
             return;
 
-        // Lakukan in-order traversal
+        // In-order traversal
         searchBySubstring(node.left, substring, results);
 
-        // Periksa apakah key mengandung substring
+        // Check if the key contains the substring
         if (node.key.toString().contains(substring)) {
             results.add(node);
         }
@@ -106,4 +120,21 @@ public class rbt<Key extends Comparable<Key>, Value> {
         searchBySubstring(node.right, substring, results);
     }
 
+    public List<Node<Key, Value>> searchByValueSubstrings(String subsString) {
+        List<Node<Key, Value>> results = new ArrayList<>();
+        searchByValueSubstring(root, subsString, results);
+        return results;
+    }
+
+    private void searchByValueSubstring(Node<Key, Value> node, String substring, List<Node<Key, Value>> results) {
+        if (node == null)
+            return;
+
+        searchByValueSubstring(node.left, substring, results);
+        if (node.value.toString().contains(substring)) {
+            results.add(node);
+        }
+
+        searchByValueSubstring(node.right, substring, results);
+    }
 }

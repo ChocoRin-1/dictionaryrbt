@@ -3,15 +3,16 @@ package org.example.tubes;
 public class Node<Key extends Comparable<Key>, Value> {
     Key key;
     Value value;
-    String description;
+    String descriptionENG,descriptionIND;
     Node<Key, Value> left, right;
     boolean color;
 
-    Node(Key key, Value value, boolean color, String description) {
+    Node(Key key, Value value, boolean color, String descriptionENG, String descriptionIND) {
         this.key = key;
         this.value = value;
         this.color = color;
-        this.description = description;
+        this.descriptionENG = descriptionENG;
+        this.descriptionIND = descriptionIND;
     }
 }
 
