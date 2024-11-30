@@ -34,6 +34,8 @@ public class SearchingController {
     private Button clean;
     @FXML
     private ToggleButton toggel;
+    @FXML
+    private Label labelresult;
 
     
     private rbt<String, String> dictionary = new rbt();
@@ -52,6 +54,37 @@ public class SearchingController {
 
     public void enter1(KeyEvent keyEvent) {
 
+    }
+
+    public int countResults(String searchText) {
+        int count = 0;
+
+        // Perform a search for all nodes matching the substring
+        List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
+        // Iterate through results and count matches in all fields
+        for (Node<String, String> result : results) {
+            if (result.key.toLowerCase().contains(searchText)) {
+                count++;
+            }
+          
+        }
+        return count;
+    }
+
+    public int countResultsIND(String searchText) {
+        int countIND = 0;
+    
+      
+        List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
+    
+        
+        for (Node<String, String> result : results) {
+            if (result.value.toLowerCase().contains(searchText)) {
+                countIND++;
+            }
+        }
+    
+        return countIND; 
     }
 
     public void initialize() {
@@ -145,10 +178,13 @@ public class SearchingController {
     
     public void search(ActionEvent actionEvent) {
         String searchText = searchbar.getText().toLowerCase();
+        int count = countResults(searchText);
+        int countIND = countResultsIND(searchText);
         if (searchText.length() < 1) {
             return;
         } 
-
+        
+        
         if (searchText.equals("rotate")) {
             performRotationGimmick();
             return;
@@ -161,27 +197,35 @@ public class SearchingController {
                 labelInd.setFont(new Font(20));
                 Label labelEng = new Label("ENG : " + result.key);
                 labelEng.setFont(new Font(20));
-    
+                
                 Label description2 = new Label("Indonesia : " + result.descriptionIND);
                 Label description1 = new Label("English : " + result.descriptionENG);
                 vboxResult.getChildren().addAll(labelInd, labelEng, description2, description1);
+                labelresult.setText("About " + countIND + " Found" );
+                labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
             }
         } else {
             List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
             for (Node<String, String> result : results) {
                 Label labelEng = new Label("ENG : " + result.key);
                 labelEng.setFont(new Font(20));
-    
+                
                 Label labelInd = new Label("IND : " + result.value);
                 labelInd.setFont(new Font(20));
                 Label description1 = new Label("English : " + result.descriptionENG);
                 Label description2 = new Label("Indonesia : " + result.descriptionIND);
                 vboxResult.getChildren().addAll(labelEng, labelInd, description1, description2);
+                labelresult.setText("about " + count + " Results found");
+                labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
             }
         }
-        
+       
+
 
     }
+
+ 
    
    
     public void addWord(String word, String definition) {
@@ -200,7 +244,6 @@ public class SearchingController {
         rotateTransition.setDuration(Duration.seconds(1));
         rotateTransition.setByAngle(360); 
         rotateTransition.setCycleCount(1); 
-
       
         rotateTransition.play();
 
@@ -213,7 +256,9 @@ public class SearchingController {
     public void toggleSearch(ActionEvent event) {
 
     }
+   
 }
+
 
    
 
