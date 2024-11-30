@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.animation.FadeTransition;
 
 public class SearchingController {
     @FXML
@@ -58,10 +59,8 @@ public class SearchingController {
 
     public int countResults(String searchText) {
         int count = 0;
-
-        // Perform a search for all nodes matching the substring
         List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
-        // Iterate through results and count matches in all fields
+    
         for (Node<String, String> result : results) {
             if (result.key.toLowerCase().contains(searchText)) {
                 count++;
@@ -189,6 +188,11 @@ public class SearchingController {
             performRotationGimmick();
             return;
         }
+
+        if (searchText.equals("fade")) {
+            performFadingGimmick();
+            return;
+        }
         vboxResult.getChildren().clear();
         if (toggel.isSelected()) {
             List<Node<String, String>> results = dictionary.searchByValueSubstrings(searchText);
@@ -210,9 +214,9 @@ public class SearchingController {
             for (Node<String, String> result : results) {
                 Label labelEng = new Label("ENG : " + result.key);
                 labelEng.setFont(new Font(20));
-                
                 Label labelInd = new Label("IND : " + result.value);
                 labelInd.setFont(new Font(20));
+                
                 Label description1 = new Label("English : " + result.descriptionENG);
                 Label description2 = new Label("Indonesia : " + result.descriptionIND);
                 vboxResult.getChildren().addAll(labelEng, labelInd, description1, description2);
@@ -221,13 +225,8 @@ public class SearchingController {
             }
         }
        
-
-
     }
 
- 
-   
-   
     public void addWord(String word, String definition) {
         // dictionary.put(word.toLowerCase(), definition);
     }
@@ -254,6 +253,15 @@ public class SearchingController {
     }
 
     public void toggleSearch(ActionEvent event) {
+
+    }
+
+    private void performFadingGimmick() {
+        FadeTransition fadeTransition = new FadeTransition();
+        fadeTransition.setNode(searchbar);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
 
     }
    
