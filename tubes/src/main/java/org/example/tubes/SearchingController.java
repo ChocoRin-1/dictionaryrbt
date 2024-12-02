@@ -4,6 +4,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
+
+import java.io.File;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -25,6 +28,7 @@ import javafx.scene.image.ImageView;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import javafx.scene.control.Label;
+
 
 public class SearchingController {
     @FXML
@@ -67,30 +71,47 @@ public class SearchingController {
 
     public int countResults(String searchText) {
         int count = 0;
-        List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
-
-        for (Node<String, String> result : results) {
-            if (result.key.toLowerCase().contains(searchText)) {
-                count++;
-            }
-
-        }
-        return count;
+        List<Node<String, String>> results = dictionary.searchBySubstring(searchText.toLowerCase());
+    
+        return results.size();
     }
-
+    
     public int countResultsIND(String searchText) {
         int countIND = 0;
+    
+        // Menambahkan .toLowerCase() untuk normalisasi input pencarian
+        List<Node<String, String>> results = dictionary.searchBySubstring(searchText.toLowerCase());
 
-        List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
-
-        for (Node<String, String> result : results) {
-            if (result.value.toLowerCase().contains(searchText)) {
-                countIND++;
-            }
-        }
-
-        return countIND;
+        return results.size();
     }
+    
+
+    // public int countResults(String searchText) {
+    //     int count = 0;
+    //     List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
+
+    //     for (Node<String, String> result : results) {
+    //         if (result.key.toLowerCase().contains(searchText)) {
+    //             count++;
+    //         }
+
+    //     }
+    //     return count;
+    // }
+
+    // public int countResultsIND(String searchText) {
+    //     int countIND = 0;
+
+    //     List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
+
+    //     for (Node<String, String> result : results) {
+    //         if (result.value.toLowerCase().contains(searchText)) {
+    //             countIND++;
+    //         }
+    //     }
+
+    //     return countIND;
+    // }
 
     public void initialize() {
         loadSampleData();
@@ -230,6 +251,10 @@ public class SearchingController {
                 "Sekumpulan tombol yang mengoperasikan komputer atau mesin ketik");
         dictionary.put("mouse", "mouse", "A small handheld device used to control the pointer on a computer screen.",
                 "Perangkat genggam kecil yang digunakan untuk mengontrol penunjuk di layar komputer");
+        dictionary.putNode(new NodeGimmick<String,String>("Rotate", "rotasi", "j", "j", performRotationGimmick));
+        dictionary.putNode(new NodeGimmick<String,String>("Fade", "Pudar", "When things get Fade or dissapearing", "Ketika sesuatu mulai memudar tingkat kecerahan atau", performFadingGimmick));
+        dictionary.putNode(new NodeGimmick<String,String>("Ramadhan", "Ramadhan", null, null, showRamadhanCountdown));
+        dictionary.putNode(new NodeGimmick<String,String>("what time is it", "ini jam berapa", null, null, showAnimatedClock));
     }
 
     public void search(ActionEvent actionEvent) {
@@ -240,62 +265,42 @@ public class SearchingController {
             return;
         }
 
-        if (searchText.equals("rotate")) {
-            performRotationGimmick();
-            return;
-        }
-
-        if (searchText.equals("fade")) {
-            performFadingGimmick();
-            return;
-        }
-
-        if (searchText.equals("buah apple")) {
-            performImageGimmick();
-            return;
-        }
-
-        if (searchText.equals("calendar")) {
-            showAnimatedClock();
-            return;
-        }
-
-        if (searchText.contains("ramadhan")) {
-            showRamadhanCountdown();
-            return; // Hentikan proses pencarian lainnya jika Ramadhan ditemukan
-        }
-
         vboxResult.getChildren().clear();
         if (toggel.isSelected()) {
-            List<Node<String, String>> results = dictionary.searchByValueSubstrings(searchText);
-            for (Node<String, String> result : results) {
-                Label labelInd = new Label("IND : " + result.value);
-                labelInd.setFont(new Font(20));
-                Label labelEng = new Label("ENG : " + result.key);
-                labelEng.setFont(new Font(20));
+                List<Node<String, String>> results = dictionary.searchByValueSubstrings(searchText);
+                for (Node<String, String> result : results) {
+                        Label labelInd = new Label("IND : " + result.value);
+                        labelInd.setFont(new Font(20));
+                        Label labelEng = new Label("ENG : " + result.key);
+                        labelEng.setFont(new Font(20));
 
                 Label description2 = new Label("Indonesia : " + result.descriptionIND);
                 Label description1 = new Label("English : " + result.descriptionENG);
                 vboxResult.getChildren().addAll(labelInd, labelEng, description2, description1);
-                labelresult.setText("About " + countIND + " Found");
+                labelresult.setText("About " + results.size() + " Found");
                 labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-            }
+                
+        }
         } else {
-            List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
-            for (Node<String, String> result : results) {
-                Label labelEng = new Label("ENG : " + result.key);
-                labelEng.setFont(new Font(20));
+        List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
+        if (!results.isEmpty() && results.get(0) instanceof NodeGimmick) {
+            NodeGimmick nodeGimmick = (NodeGimmick) results.get(0);
+            nodeGimmick.getGimmick();
+            System.out.println("Found a NodeGimmick: " + nodeGimmick.toString());
+        for (Node<String, String> result : results) {
+                    Label labelEng = new Label("ENG : " + result.key);
+                    labelEng.setFont(new Font(20));
                 Label labelInd = new Label("IND : " + result.value);
                 labelInd.setFont(new Font(20));
-
+                
                 Label description1 = new Label("English : " + result.descriptionENG);
                 Label description2 = new Label("Indonesia : " + result.descriptionIND);
                 vboxResult.getChildren().addAll(labelEng, labelInd, description1, description2);
-                labelresult.setText("about " + count + " Results found");
+                labelresult.setText("about " + results.size() + " Results found");
                 labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-            }
         }
+        }
+}
 
     }
 
@@ -309,7 +314,7 @@ public class SearchingController {
 
     }
 
-    private void performRotationGimmick() {
+    NodeGimmick.ValueFunction<String> performRotationGimmick = (key) -> {
         RotateTransition rotateTransition = new RotateTransition();
         rotateTransition.setNode(searchbar);
         rotateTransition.setDuration(Duration.seconds(1));
@@ -317,53 +322,36 @@ public class SearchingController {
         rotateTransition.setCycleCount(1);
 
         rotateTransition.play();
-
-        Label gimmickLabel = new Label("YIPPE");
-        gimmickLabel.setFont(new Font(18));
-        vboxResult.getChildren().add(gimmickLabel);
-    }
+        return "";
+    };
 
     public void toggleSearch(ActionEvent event) {
 
     }
 
-    private void performFadingGimmick() {
+    NodeGimmick.ValueFunction<String> performFadingGimmick = (key) -> {
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2));
         fadeTransition.setNode(searchbar);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
         fadeTransition.play();
+        return "";
 
-    }
+    };
 
-    private void performImageGimmick() {
-        ImageGimmick.setImage(new Image(getClass().getResource("/apple.png").toExternalForm()));
-        // Ubah path sesuai lokasi file gambar Anda
-        ImageGimmick.setOpacity(0);
 
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0), ImageGimmick);
-        fadeTransition.setFromValue(0); // Mulai dari transparan
-        fadeTransition.setToValue(1); // Berakhir pada opacity penuh
-        fadeTransition.play();
-
-        Label gimmickLabel = new Label("Apple Indeed");
-        vboxResult.getChildren().add(gimmickLabel);
-    }
-
-    private void showAnimatedClock() {
+    NodeGimmick.ValueFunction<String> showAnimatedClock = (key) -> {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     
-        // Buat label jika belum ada
+        
         if (!vboxResult.getChildren().contains(timeLabel)) {
-            timeLabel = new Label(); // Pastikan label diinisialisasi jika belum ada
+            timeLabel = new Label(); 
             timeLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-            vboxResult.getChildren().add(timeLabel); // Tambahkan label ke VBox
+            vboxResult.getChildren().add(timeLabel); 
         }
     
-        // Update waktu setiap detik tanpa animasi
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(1), event -> {
-                // Format waktu sekarang
                 String currentTime = LocalTime.now().format(timeFormatter);
                 timeLabel.setText("Waktu: " + currentTime);
             })
@@ -371,9 +359,10 @@ public class SearchingController {
     
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-    }
+        return "";
+    };
     
-    private void showRamadhanCountdown() {
+    NodeGimmick.ValueFunction<String> showRamadhanCountdown = (key) -> {
         
         LocalDate ramadhanStart = LocalDate.of(2025, 2, 28); 
         LocalDate today = LocalDate.now();
@@ -392,6 +381,7 @@ public class SearchingController {
         
         vboxResult.getChildren().clear();  
         vboxResult.getChildren().add(countdownLabel); 
-    }
+        return "";
+    };
 
 }

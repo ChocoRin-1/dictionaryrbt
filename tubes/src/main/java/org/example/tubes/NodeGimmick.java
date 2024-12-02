@@ -1,20 +1,25 @@
 package org.example.tubes;
 
 public class NodeGimmick<Key extends Comparable<Key>, Value> extends Node<Key, Value> {
-    Runnable gimmick;
+    ValueFunction gimmick;
+    private Key key;
 
     // Constructor untuk GimmickNode
-    public NodeGimmick(Key key, Value value, boolean color, String descriptionENG, String descriptionIND, Runnable gimmick) {
-        super(key, value, color, descriptionENG, descriptionIND);
+    public NodeGimmick(Key key, Value value, String descriptionENG, String descriptionIND, ValueFunction gimmick) {
+        super(key, value, true, descriptionENG, descriptionIND);
         this.gimmick = gimmick;
+        this.key = key;
     }
 
-    // Metode untuk menjalankan gimmick
-    public void executeGimmick() {
-        if (gimmick != null) {
-            gimmick.run();
-        } else {
-            System.out.println("No gimmick to execute for key: " + key);
-        }
+    @FunctionalInterface
+    public interface ValueFunction<Key extends Comparable<Key>> {
+        Object apply(Key key);
     }
+
+    public void getGimmick() {
+        gimmick.apply(key);
+    }
+    
+        
+    
 }

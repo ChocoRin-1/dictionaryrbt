@@ -49,6 +49,37 @@ public class rbt<Key extends Comparable<Key>, Value> {
         root.color = BLACK;
     }
 
+    public void putNode(Node<Key, Value> node) {
+        root = putNodeHelper(root, node);
+        root.color = BLACK;
+    }
+
+    private Node<Key, Value> putNodeHelper(Node<Key, Value> h, Node<Key, Value> node) {
+        if (h == null)
+            return node;
+
+        int cmp = node.key.compareTo(h.key);
+        if (cmp < 0)
+            h.left = putNodeHelper(h.left, node);
+        else if (cmp > 0)
+            h.right = putNodeHelper(h.right, node);
+        else {
+            h.value = node.value; // Update value if key already exists
+           
+        }
+
+        // Balance the tree
+        if (isRed(h.right) && !isRed(h.left))
+            h = rotateLeft(h);
+        if (isRed(h.left) && isRed(h.left.left))
+            h = rotateRight(h);
+        if (isRed(h.left) && isRed(h.right))
+            flipColors(h);
+
+        return h;
+    }
+
+
     // Helper method to recursively put a key-value pair in the tree
     private Node<Key, Value> put(Node<Key, Value> h, Key key, Value value, String descriptionENG, String descriptionIND) {
         if (h == null)
@@ -95,46 +126,89 @@ public class rbt<Key extends Comparable<Key>, Value> {
         return get(key) != null;
     }
 
-
-    // Search for keys that contain a substring
     public List<Node<Key, Value>> searchBySubstring(String substring) {
         List<Node<Key, Value>> results = new ArrayList<>();
         searchBySubstring(root, substring, results);
-        // System.out.println(results);
         return results;
     }
-
+    
     // Helper method for the in-order traversal search
     private void searchBySubstring(Node<Key, Value> node, String substring, List<Node<Key, Value>> results) {
         if (node == null)
             return;
-
+    
         // In-order traversal
         searchBySubstring(node.left, substring, results);
-
-        // Check if the key contains the substring
-        if (node.key.toString().contains(substring)) {
+    
+        // Ensure case-insensitive comparison and handle nulls
+        if (node.key != null && node.key.toString().toLowerCase().contains(substring.toLowerCase())) {
             results.add(node);
         }
-
+    
         searchBySubstring(node.right, substring, results);
     }
-
-    public List<Node<Key, Value>> searchByValueSubstrings(String subsString) {
+    
+    public List<Node<Key, Value>> searchByValueSubstrings(String substring) {
         List<Node<Key, Value>> results = new ArrayList<>();
-        searchByValueSubstring(root, subsString, results);
+        searchByValueSubstring(root, substring, results);
         return results;
     }
-
+    
     private void searchByValueSubstring(Node<Key, Value> node, String substring, List<Node<Key, Value>> results) {
         if (node == null)
             return;
-
+    
         searchByValueSubstring(node.left, substring, results);
-        if (node.value.toString().contains(substring)) {
+        
+        // Ensure case-insensitive comparison and handle nulls
+        if (node.value != null && node.value.toString().toLowerCase().contains(substring.toLowerCase())) {
             results.add(node);
         }
-
+    
         searchByValueSubstring(node.right, substring, results);
     }
+    
+
+
+    // // Search for keys that contain a substring
+    // public List<Node<Key, Value>> searchBySubstring(String substring) {
+    //     List<Node<Key, Value>> results = new ArrayList<>();
+    //     searchBySubstring(root, substring, results);
+    //     // System.out.println(results);
+    //     return results;
+    // }
+
+    // // Helper method for the in-order traversal search
+    // private void searchBySubstring(Node<Key, Value> node, String substring, List<Node<Key, Value>> results) {
+    //     if (node == null)
+    //         return;
+
+    //     // In-order traversal
+    //     searchBySubstring(node.left, substring, results);
+
+    //     // Check if the key contains the substring
+    //     if (node.key.toString().contains(substring)) {
+    //         results.add(node);
+    //     }
+
+    //     searchBySubstring(node.right, substring, results);
+    // }
+
+    // public List<Node<Key, Value>> searchByValueSubstrings(String subsString) {
+    //     List<Node<Key, Value>> results = new ArrayList<>();
+    //     searchByValueSubstring(root, subsString, results);
+    //     return results;
+    // }
+
+    // private void searchByValueSubstring(Node<Key, Value> node, String substring, List<Node<Key, Value>> results) {
+    //     if (node == null)
+    //         return;
+
+    //     searchByValueSubstring(node.left, substring, results);
+    //     if (node.value.toString().contains(substring)) {
+    //         results.add(node);
+    //     }
+
+    //     searchByValueSubstring(node.right, substring, results);
+    // }
 }
