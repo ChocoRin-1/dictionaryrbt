@@ -19,8 +19,8 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         
         // Enable full screen
-        stage.setFullScreen(true);
-        stage.setFullScreenExitHint("Tekan ESC untuk keluar dari layar penuh");
+        stage.setFullScreen(false);
+        // stage.setFullScreenExitHint("Tekan ESC untuk keluar dari layar penuh");
         stage.setFullScreenExitKeyCombination(null); 
         stage.show();
     }

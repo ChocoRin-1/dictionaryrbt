@@ -4,7 +4,6 @@ public class NodeGimmick<Key extends Comparable<Key>, Value> extends Node<Key, V
     ValueFunction gimmick;
     private Key key;
 
-    // Constructor untuk GimmickNode
     public NodeGimmick(Key key, Value value, String descriptionENG, String descriptionIND, ValueFunction gimmick) {
         super(key, value, true, descriptionENG, descriptionIND);
         this.gimmick = gimmick;

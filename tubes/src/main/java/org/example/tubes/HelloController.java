@@ -36,7 +36,7 @@ public class HelloController {
         stage.setScene(mainPageScene);
 
         // Mengatur stage ke fullscreen
-        stage.setFullScreen(true);
+        stage.setFullScreen(false);
 
         // (Opsional) Mempertahankan ukuran sebelumnya saat keluar dari fullscreen
         stage.setWidth(prevWidth);
