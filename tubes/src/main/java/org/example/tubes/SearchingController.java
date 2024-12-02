@@ -257,138 +257,88 @@ public class SearchingController {
                                 "Perangkat genggam kecil yang digunakan untuk mengontrol penunjuk di layar komputer");
                 dictionary.putNode(
                                 new NodeGimmick<String, String>("Rotate", "rotasi", "j", "j", performRotationGimmick));
-                // dictionary.putNode(new NodeGimmick<String,String>("Fade", "Pudar", "When
-                // things get Fade or dissapearing", "Ketika sesuatu mulai memudar tingkat
-                // kecerahan atau", performFadingGimmick));
+                dictionary.putNode(new NodeGimmick<String,String>("Fade", "pudar", "Fading","Memudar",performFadingGimmick));
                 dictionary.putNode(new NodeGimmick<String, String>("Ramadhan", "Ramadhan", null, null,
                                 showRamadhanCountdown));
                 dictionary.putNode(new NodeGimmick<String, String>("what time is it", "ini jam berapa", null, null,
                                 showAnimatedClock));
         }
-
-        // public void search(ActionEvent actionEvent) {
-        //         String searchText = searchbar.getText().toLowerCase();
-        //         int count = countResults(searchText);
-        //         int countIND = countResultsIND(searchText);
-        //         if (searchText.length() < 1) {
-        //                 return;
-        //         }
-
-        //         vboxResult.getChildren().clear();
-
-        //         if (searchText.equals("rotate")) {
-        //                 performRotationGimmick.apply("rotate");
-        //                 return;
-        //         }
-
-        //         if (searchText.equals("fade")) {
-        //                 performFadingGimmick.apply("fade");
-        //                 return;
-        //         }
-
-        //         if (searchText.equals("what time is it")) {
-        //                 showAnimatedClock.apply("what time is it");
-        //                 return;
-        //         }
-
-        //         if (searchText.equals("ramadhan")) {
-        //                 showRamadhanCountdown.apply("ramadhan");
-        //                 return;
-        //         }
-        //         if (toggel.isSelected()) {
-        //                 List<Node<String, String>> results = dictionary.searchByValueSubstrings(searchText);
-        //                 for (Node<String, String> result : results) {
-        //                         Label labelInd = new Label("IND : " + result.value);
-        //                         labelInd.setFont(new Font(20));
-        //                         Label labelEng = new Label("ENG : " + result.key);
-        //                         labelEng.setFont(new Font(20));
-
-        //                         Label description2 = new Label("Indonesia : " + result.descriptionIND);
-        //                         Label description1 = new Label("English : " + result.descriptionENG);
-        //                         vboxResult.getChildren().addAll(labelInd, labelEng, description2, description1);
-        //                         labelresult.setText("About " + results.size() + " Found");
-        //                         labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        //                 }
-        //         } else {
-        //                 List<Node<String, String>> results = dictionary.searchBySubstring(searchText);
-        //                 if (!results.isEmpty() && results.get(0) instanceof NodeGimmick) {
-        //                         NodeGimmick nodeGimmick = (NodeGimmick) results.get(0);
-        //                         nodeGimmick.getGimmick();
-        //                         System.out.println("Found a NodeGimmick: " + nodeGimmick.toString());
-        //                         for (Node<String, String> result : results) {
-        //                                 Label labelEng = new Label("ENG : " + result.key);
-        //                                 labelEng.setFont(new Font(20));
-        //                                 Label labelInd = new Label("IND : " + result.value);
-        //                                 labelInd.setFont(new Font(20));
-
-        //                                 Label description1 = new Label("English : " + result.descriptionENG);
-        //                                 Label description2 = new Label("Indonesia : " + result.descriptionIND);
-        //                                 vboxResult.getChildren().addAll(labelEng, labelInd, description1, description2);
-        //                                 labelresult.setText("about " + results.size() + " Results found");
-        //                                 labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        //                         }
-        //                 }
-        //         }
-
-        // }
-
+        
         public void search(ActionEvent actionEvent) {
                 String searchText = searchbar.getText().toLowerCase();
                 if (searchText.length() < 1) {
-                    return;
+                        return;
                 }
-            
+
                 vboxResult.getChildren().clear();
-            
+
                 // Check for gimmick keywords first
                 if (searchText.equals("rotate")) {
-                    performRotationGimmick.apply("rotate");
-                    return;
+                        performRotationGimmick.apply("rotate");
+                        return;
                 }
-            
+
                 if (searchText.equals("fade")) {
-                    performFadingGimmick.apply("fade");
-                    return;
+                        performFadingGimmick.apply("fade");
+                        return;
                 }
-            
+
                 if (searchText.equals("what time is it")) {
-                    showAnimatedClock.apply("what time is it");
-                    return;
+                        showAnimatedClock.apply("what time is it");
+                        return;
                 }
-            
+
                 if (searchText.equals("ramadhan")) {
-                    showRamadhanCountdown.apply("ramadhan");
-                    return;
+                        showRamadhanCountdown.apply("ramadhan");
+                        return;
                 }
-            
+
                 // Proceed with normal dictionary search if no gimmick was triggered
                 List<Node<String, String>> results;
                 if (toggel.isSelected()) {
-                    results = dictionary.searchByValueSubstrings(searchText);
+                        // Indonesian to English search
+                        results = dictionary.searchBySubstring(searchText); // Search by Indonesian terms
+                        // Display results in the order: English first, then Indonesian
+                        if (!results.isEmpty()) {
+                                for (Node<String, String> result : results) {
+                                        Label labelEng = new Label("ENG : " + result.key);
+                                        labelEng.setFont(new Font(20));
+                                        Label labelInd = new Label("IND : " + result.value);
+                                        labelInd.setFont(new Font(20));
+
+                                        Label description1 = new Label("English : " + result.descriptionENG);
+                                        Label description2 = new Label("Indonesia : " + result.descriptionIND);
+                                        vboxResult.getChildren().addAll(labelEng, labelInd, description1, description2);
+                                }
+                                labelresult.setText("About " + results.size() + " results found");
+                                labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+                        } else {
+                                labelresult.setText("No results found");
+                                labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+                        }
                 } else {
-                    results = dictionary.searchBySubstring(searchText);
+                        // English to Indonesian search
+                        results = dictionary.searchByValueSubstrings(searchText); // Search by English terms
+                        // Display results in the order: Indonesian first, then English
+                        if (!results.isEmpty()) {
+                                for (Node<String, String> result : results) {
+                                        Label labelInd = new Label("IND : " + result.value);
+                                        labelInd.setFont(new Font(20));
+                                        Label labelEng = new Label("ENG : " + result.key);
+                                        labelEng.setFont(new Font(20));
+
+                                        Label description1 = new Label("English : " + result.descriptionENG);
+                                        Label description2 = new Label("Indonesia : " + result.descriptionIND);
+                                        vboxResult.getChildren().addAll(labelInd, labelEng, description1, description2);
+                                }
+                                labelresult.setText("About " + results.size() + " results found");
+                                labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+                        } else {
+                                labelresult.setText("No results found");
+                                labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+                        }
                 }
-            
-                // Display results
-                if (!results.isEmpty()) {
-                    for (Node<String, String> result : results) {
-                        Label labelEng = new Label("ENG : " + result.key);
-                        labelEng.setFont(new Font(20));
-                        Label labelInd = new Label("IND : " + result.value);
-                        labelInd.setFont(new Font(20));
-            
-                        Label description1 = new Label("English : " + result.descriptionENG);
-                        Label description2 = new Label("Indonesia : " + result.descriptionIND);
-                        vboxResult.getChildren().addAll(labelEng, labelInd, description1, description2);
-                    }
-                    labelresult.setText("About " + results.size() + " results found");
-                    labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-                } else {
-                    labelresult.setText("No results found");
-                    labelresult.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-                }
-            }
+        }
 
         public void addWord(String word, String definition) {
                 // dictionary.put(word.toLowerCase(), definition);
